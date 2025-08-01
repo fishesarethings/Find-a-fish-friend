@@ -1,6 +1,25 @@
-/* --- Global & Reset --- */
+/* --- Reset & Base --- */
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: sans-serif; background: #e0f7fa; overflow: hidden; }
+
+/* --- Portrait Frame --- */
+.portrait-frame {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: #e0f7fa;
+  margin: 0 auto;
+}
+.portrait-frame img {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; height: auto;
+  min-height: 100%;
+  object-fit: cover;
+}
 
 /* --- Overlays & Panels --- */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:10; }
@@ -10,22 +29,28 @@ body { font-family: sans-serif; background: #e0f7fa; overflow: hidden; }
 
 /* --- Onboarding --- */
 #onboard { flex-direction:column; }
-#onboard input { padding:0.5em; margin:1em; width:200px; }
-#onboard button { padding:0.5em 1em; }
+#onboard input, #onboard button { padding:0.5em; margin:0.5em; }
 
 /* --- Card View --- */
 #cardView { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-#fishCard { background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); border-radius:1rem; padding:1rem; text-align:center; width:300px; }
-#fishCard img { width:100%; height:300px; object-fit:cover; border-radius:0.5rem; }
-#controls { display:flex; justify-content:space-around; margin-top:1em; }
-#controls button { font-size:1.5rem; background:none; border:none; cursor:pointer; }
+#fishCard { background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); border-radius:1rem; padding:1rem; text-align:center; width:320px; }
+#controls { display:flex; justify-content:space-between; margin-top:1em; }
+.btn-group { display:flex; flex-direction:column; gap:0.5em; }
+.btn-group.left { align-items:flex-start; }
+.btn-group.right { align-items:flex-end; }
+#controls button {
+  background:none; border:none; cursor:pointer;
+  width:48px; height:48px;
+}
+#controls button img { width:100%; height:100%; }
 
 /* --- Chat Panel --- */
-#chatPanel header { display:flex; justify-content:space-between; padding:1em; background:#00796b; color:#fff; }
+#chatPanel header { display:flex; justify-content:space-between; align-items:center; padding:1em; background:#00796b; color:#fff; }
 #chatHistory { flex:1; padding:1em; overflow-y:auto; }
 #chatInputWrapper { display:flex; padding:1em; }
 #chatInputWrapper input { flex:1; padding:0.5em; }
-#chatInputWrapper button { margin-left:0.5em; }
+#chatInputWrapper button { margin-left:0.5em; width:32px; height:32px; background:none; border:none; }
+#chatInputWrapper button img { width:100%; height:100%; }
 
 /* --- History View --- */
 #historyView header { display:flex; gap:0.5em; padding:1em; background:#004d40; }
@@ -35,4 +60,4 @@ body { font-family: sans-serif; background: #e0f7fa; overflow: hidden; }
 /* --- History Cards --- */
 .histCard { width:120px; text-align:center; }
 .histCard img { width:100%; height:100px; object-fit:cover; border-radius:0.3rem; }
-.histCard .tags { font-size:0.8rem; color:#555; }
+.histCard .tags { font-size:0.8rem; color:#555; display:block; margin-top:0.25em; }

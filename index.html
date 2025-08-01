@@ -9,59 +9,92 @@
 </head>
 <body>
   <div id="app">
-    <!-- Splash / Username prompt -->
+    <!-- Onboarding Overlay -->
     <div id="onboard" class="overlay">
       <h1>Welcome to FishFriend!</h1>
       <input id="usernameInput" placeholder="Choose your fishy name…" />
       <button id="saveUsername">Continue</button>
     </div>
 
-    <!-- Main card view -->
+    <!-- Main Card View -->
     <div id="cardView">
       <div id="fishCard">
-        <img id="fishImage" src="" alt="Fish" />
+        <!-- Portrait-frame wrapper -->
+        <div class="portrait-frame">
+          <img id="fishImage" src="" alt="Fish" />
+        </div>
         <div id="controls">
-          <button id="loveBtn" title="Love">❤️</button>
-          <button id="likeBtn" title="Like">👍</button>
-          <button id="dislikeBtn" title="Dislike">💔</button>
-          <button id="chatBtn" title="Chat">💬</button>
+          <div class="btn-group left">
+            <button id="loveBtn" title="Love">
+              <img src="assets/icons/love.svg" alt="Love" />
+            </button>
+            <button id="dislikeBtn" title="Dislike">
+              <img src="assets/icons/dislike.svg" alt="Dislike" />
+            </button>
+          </div>
+          <div class="btn-group right">
+            <button id="likeBtn" title="Like">
+              <img src="assets/icons/like.svg" alt="Like" />
+            </button>
+            <button id="chatBtn" title="Chat">
+              <img src="assets/icons/chat.svg" alt="Chat" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Chat panel -->
+    <!-- Chat Panel -->
     <div id="chatPanel" class="slideout">
       <header>
         <h2 id="chatWith">Chat</h2>
-        <button id="closeChat">✖️</button>
+        <button id="closeChat"><img src="assets/icons/close.svg" alt="Close" /></button>
       </header>
       <div id="chatHistory"></div>
       <div id="chatInputWrapper">
         <input id="chatInput" placeholder="Say something…" />
-        <button id="sendChat">Send</button>
+        <button id="sendChat">
+          <img src="assets/icons/send.svg" alt="Send" />
+        </button>
       </div>
     </div>
 
-    <!-- History/Search view -->
+    <!-- History & Search View -->
     <div id="historyView" class="overlay hidden">
       <header>
-        <button id="closeHistory">← Back</button>
+        <button id="closeHistory"><img src="assets/icons/back.svg" alt="Back" /></button>
         <input id="searchInput" placeholder="Search by name, personality…" />
         <select id="filterSelect">
           <option value="all">All</option>
-          <option value="loved">Loved ❤️</option>
-          <option value="liked">Liked 👍</option>
-          <option value="chatted">Chatted 💬</option>
+          <option value="loved">Loved</option>
+          <option value="liked">Liked</option>
+          <option value="chatted">Chatted</option>
         </select>
       </header>
       <div id="historyCards"></div>
     </div>
 
-    <!-- Settings panel -->
+    <!-- Settings Panel -->
     <div id="settingsView" class="overlay hidden">
       <header>
-        <button id="closeSettings">← Back</button>
+        <button id="closeSettings"><img src="assets/icons/back.svg" alt="Back" /></button>
         <h2>Settings</h2>
       </header>
       <label>
-        <input type="checkbox" id="toggle
+        <input type="checkbox" id="toggleAmbientVis" />
+        Ambient visuals
+      </label>
+      <label>
+        <input type="checkbox" id="toggleAmbientSound" />
+        Ambient sound
+      </label>
+      <button id="exportBtn">Export .fishfriend</button>
+      <input type="file" id="importInput" accept=".fishfriend" />
+      <button id="resetBtn">Reset All</button>
+    </div>
+  </div>
+
+  <script src="assets/idb.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
