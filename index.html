@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FishFriend</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div id="app">
+    <!-- Splash / Username prompt -->
+    <div id="onboard" class="overlay">
+      <h1>Welcome to FishFriend!</h1>
+      <input id="usernameInput" placeholder="Choose your fishy name…" />
+      <button id="saveUsername">Continue</button>
+    </div>
 
+    <!-- Main card view -->
+    <div id="cardView">
+      <div id="fishCard">
+        <img id="fishImage" src="" alt="Fish" />
+        <div id="controls">
+          <button id="loveBtn" title="Love">❤️</button>
+          <button id="likeBtn" title="Like">👍</button>
+          <button id="dislikeBtn" title="Dislike">💔</button>
+          <button id="chatBtn" title="Chat">💬</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat panel -->
+    <div id="chatPanel" class="slideout">
+      <header>
+        <h2 id="chatWith">Chat</h2>
+        <button id="closeChat">✖️</button>
+      </header>
+      <div id="chatHistory"></div>
+      <div id="chatInputWrapper">
+        <input id="chatInput" placeholder="Say something…" />
+        <button id="sendChat">Send</button>
+      </div>
+    </div>
+
+    <!-- History/Search view -->
+    <div id="historyView" class="overlay hidden">
+      <header>
+        <button id="closeHistory">← Back</button>
+        <input id="searchInput" placeholder="Search by name, personality…" />
+        <select id="filterSelect">
+          <option value="all">All</option>
+          <option value="loved">Loved ❤️</option>
+          <option value="liked">Liked 👍</option>
+          <option value="chatted">Chatted 💬</option>
+        </select>
+      </header>
+      <div id="historyCards"></div>
+    </div>
+
+    <!-- Settings panel -->
+    <div id="settingsView" class="overlay hidden">
+      <header>
+        <button id="closeSettings">← Back</button>
+        <h2>Settings</h2>
+      </header>
+      <label>
+        <input type="checkbox" id="toggle
