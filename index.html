@@ -5,42 +5,50 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FishFriend</title>
   <link rel="stylesheet" href="assets/styles.css" />
-  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
   <div id="app">
-    <!-- Onboarding Overlay -->
+
+    <!-- Onboarding -->
     <div id="onboard" class="overlay">
       <h1>Welcome to FishFriend!</h1>
       <input id="usernameInput" placeholder="Choose your fishy name…" />
       <button id="saveUsername">Continue</button>
     </div>
 
-    <!-- Main Card View -->
-    <div id="cardView">
-      <div id="fishCard">
-        <!-- Portrait-frame wrapper -->
-        <div class="portrait-frame">
-          <img id="fishImage" src="" alt="Fish" />
-        </div>
-        <div id="controls">
-          <div class="btn-group left">
-            <button id="loveBtn" title="Love">
-              <img src="assets/icons/love.svg" alt="Love" />
-            </button>
-            <button id="dislikeBtn" title="Dislike">
-              <img src="assets/icons/dislike.svg" alt="Dislike" />
-            </button>
+    <!-- Main Tinder Container -->
+    <div class="tinder" id="tinder">
+      <div class="tinder--status">
+        <img id="statusNope" src="assets/icons/dislike.svg" class="status-icon nope" alt="Nope">
+        <img id="statusLove" src="assets/icons/love.svg" class="status-icon love" alt="Love">
+      </div>
+
+      <div class="tinder--cards">
+        <div class="tinder--card" id="fishCard">
+          <div class="portrait-frame" id="portraitFrame">
+            <img id="fishImage" src="" alt="Fish" />
+            <!-- Overlay controls -->
+            <div class="overlay-controls">
+              <button id="loveBtn" title="Love"><img src="assets/icons/love.svg" alt="Love"></button>
+              <button id="likeBtn" title="Like"><img src="assets/icons/like.svg" alt="Like"></button>
+              <button id="dislikeBtn" title="Dislike"><img src="assets/icons/dislike.svg" alt="Dislike"></button>
+              <button id="chatBtn" title="Chat"><img src="assets/icons/chat.svg" alt="Chat"></button>
+              <button id="settingsBtn" title="Settings" class="settings-btn">
+                <img src="assets/icons/settings.svg" alt="Settings">
+              </button>
+            </div>
           </div>
-          <div class="btn-group right">
-            <button id="likeBtn" title="Like">
-              <img src="assets/icons/like.svg" alt="Like" />
-            </button>
-            <button id="chatBtn" title="Chat">
-              <img src="assets/icons/chat.svg" alt="Chat" />
-            </button>
+          <!-- Description panel -->
+          <div id="descriptionPanel" class="desc-hidden">
+            <h2 id="fishName"></h2>
+            <p id="fishDescription"></p>
           </div>
         </div>
+      </div>
+
+      <div class="tinder--buttons">
+        <button id="btnNope"><img src="assets/icons/dislike.svg" alt="Nope"></button>
+        <button id="btnLove"><img src="assets/icons/love.svg" alt="Love"></button>
       </div>
     </div>
 
@@ -48,53 +56,38 @@
     <div id="chatPanel" class="slideout">
       <header>
         <h2 id="chatWith">Chat</h2>
-        <button id="closeChat"><img src="assets/icons/close.svg" alt="Close" /></button>
+        <button id="closeChat"><img src="assets/icons/close.svg" alt="Close"></button>
       </header>
       <div id="chatHistory"></div>
       <div id="chatInputWrapper">
         <input id="chatInput" placeholder="Say something…" />
-        <button id="sendChat">
-          <img src="assets/icons/send.svg" alt="Send" />
-        </button>
+        <button id="sendChat"><img src="assets/icons/send.svg" alt="Send"></button>
       </div>
-    </div>
-
-    <!-- History & Search View -->
-    <div id="historyView" class="overlay hidden">
-      <header>
-        <button id="closeHistory"><img src="assets/icons/back.svg" alt="Back" /></button>
-        <input id="searchInput" placeholder="Search by name, personality…" />
-        <select id="filterSelect">
-          <option value="all">All</option>
-          <option value="loved">Loved</option>
-          <option value="liked">Liked</option>
-          <option value="chatted">Chatted</option>
-        </select>
-      </header>
-      <div id="historyCards"></div>
     </div>
 
     <!-- Settings Panel -->
     <div id="settingsView" class="overlay hidden">
       <header>
-        <button id="closeSettings"><img src="assets/icons/back.svg" alt="Back" /></button>
         <h2>Settings</h2>
+        <button id="closeSettings"><img src="assets/icons/close.svg" alt="Close"></button>
       </header>
-      <label>
-        <input type="checkbox" id="toggleAmbientVis" />
-        Ambient visuals
-      </label>
-      <label>
-        <input type="checkbox" id="toggleAmbientSound" />
-        Ambient sound
-      </label>
+      <button id="downloadSite">Download Site for Offline</button>
       <button id="exportBtn">Export .fishfriend</button>
       <input type="file" id="importInput" accept=".fishfriend" />
       <button id="resetBtn">Reset All</button>
     </div>
+
   </div>
 
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
   <script src="assets/idb.js"></script>
   <script src="assets/app.js"></script>
+  <script>
+    // Service Worker registration (for offline caching)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(console.error);
+    }
+  </script>
 </body>
 </html>

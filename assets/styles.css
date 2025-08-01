@@ -1,63 +1,99 @@
-/* --- Reset & Base --- */
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: sans-serif; background: #e0f7fa; overflow: hidden; }
+/* Reset & Base */
+*, *:before, *:after { box-sizing:border-box; margin:0; padding:0; }
+body { background:#CCFBFE; font-family:sans-serif; overflow:hidden; }
 
-/* --- Portrait Frame --- */
+/* Tinder container */
+.tinder {
+  width:100vw; height:100vh; display:flex; flex-direction:column;
+  position:relative; opacity:0; transition:opacity .2s ease-in-out;
+}
+.tinder.loaded { opacity:1; }
+
+/* Status icons */
+.tinder--status {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  z-index:2; pointer-events:none;
+}
+.status-icon {
+  position:absolute; width:100px; opacity:0; transform:scale(0.3);
+  transition:all .2s ease-in-out;
+}
+.tinder_love .status-icon.love { opacity:.7; transform:scale(1); }
+.tinder_nope .status-icon.nope { opacity:.7; transform:scale(1); }
+
+/* Cards wrapper */
+.tinder--cards {
+  flex:1; padding-top:40px; display:flex; justify-content:center;
+  align-items:flex-end; position:relative; z-index:1;
+}
+
+/* Single card */
+.tinder--card {
+  width:90vw; max-width:400px; height:70vh;
+  background:#fff; border-radius:8px; overflow:hidden;
+  position:absolute; will-change:transform;
+  transition:all .3s ease-in-out; cursor:grab;
+}
+.moving.tinder--card { transition:none; cursor:grabbing; }
+
+/* Portrait frame */
 .portrait-frame {
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  position: relative;
-  overflow: hidden;
-  border-radius: 0.5rem;
-  background: #e0f7fa;
-  margin: 0 auto;
+  position:relative; width:100%; height:100%; overflow:hidden;
 }
 .portrait-frame img {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%; height: auto;
-  min-height: 100%;
-  object-fit: cover;
+  width:100%; height:100%; object-fit:cover;
 }
 
-/* --- Overlays & Panels --- */
-.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:10; }
+/* Overlay controls inside frame */
+.overlay-controls {
+  position:absolute; top:8px; left:8px; right:8px; display:flex;
+  justify-content:space-between; pointer-events:none;
+}
+.overlay-controls button {
+  pointer-events:auto; background:rgba(255,255,255,0.8);
+  border:none; border-radius:50%; width:36px; height:36px;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s;
+}
+.overlay-controls button:hover { transform:scale(1.1); }
+.settings-btn { position:absolute; top:8px; right:8px; }
+
+/* Description Panel */
+#descriptionPanel {
+  position:absolute; bottom:0; left:0; right:0;
+  background:rgba(255,255,255,0.9); padding:1rem;
+  max-height:0; overflow:hidden; opacity:0;
+  transition:max-height .5s ease, opacity .5s ease;
+}
+.desc-visible {
+  max-height:180px; opacity:1;
+}
+#descriptionPanel h2 { margin-bottom:0.5rem; }
+#descriptionPanel p { line-height:1.4; }
+
+/* Buttons below cards */
+.tinder--buttons {
+  flex:0 0 100px; text-align:center; padding-top:20px;
+}
+.tinder--buttons button {
+  border:none; background:#fff; border-radius:50%; width:60px; height:60px;
+  margin:0 8px; cursor:pointer; transition:transform .2s;
+}
+.tinder--buttons button:hover { transform:scale(1.1); }
+.tinder--buttons img { width:100%; }
+
+/* Overlays & Panels */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6);
+  display:flex; align-items:center; justify-content:center; z-index:10;
+}
 .overlay.hidden { display:none; }
-.slideout { position:fixed; top:0; right:-100%; width:80%; max-width:360px; height:100%; background:#fff; box-shadow:-2px 0 10px rgba(0,0,0,0.3); transition:right .3s; z-index:9; }
-.slideout.open { right:0; }
-
-/* --- Onboarding --- */
-#onboard { flex-direction:column; }
-#onboard input, #onboard button { padding:0.5em; margin:0.5em; }
-
-/* --- Card View --- */
-#cardView { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-#fishCard { background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); border-radius:1rem; padding:1rem; text-align:center; width:320px; }
-#controls { display:flex; justify-content:space-between; margin-top:1em; }
-.btn-group { display:flex; flex-direction:column; gap:0.5em; }
-.btn-group.left { align-items:flex-start; }
-.btn-group.right { align-items:flex-end; }
-#controls button {
-  background:none; border:none; cursor:pointer;
-  width:48px; height:48px;
+.slideout {
+  position:fixed; top:0; right:-100%; width:80%; max-width:360px; height:100%;
+  background:#fff; box-shadow:-2px 0 10px rgba(0,0,0,0.3); transition:right .3s; z-index:9;
 }
-#controls button img { width:100%; height:100%; }
-
-/* --- Chat Panel --- */
-#chatPanel header { display:flex; justify-content:space-between; align-items:center; padding:1em; background:#00796b; color:#fff; }
-#chatHistory { flex:1; padding:1em; overflow-y:auto; }
-#chatInputWrapper { display:flex; padding:1em; }
-#chatInputWrapper input { flex:1; padding:0.5em; }
-#chatInputWrapper button { margin-left:0.5em; width:32px; height:32px; background:none; border:none; }
-#chatInputWrapper button img { width:100%; height:100%; }
-
-/* --- History View --- */
-#historyView header { display:flex; gap:0.5em; padding:1em; background:#004d40; }
-#historyView header input, #historyView header select { flex:1; padding:0.5em; }
-#historyCards { padding:1em; display:flex; flex-wrap:wrap; gap:1em; justify-content:center; }
-
-/* --- History Cards --- */
-.histCard { width:120px; text-align:center; }
-.histCard img { width:100%; height:100px; object-fit:cover; border-radius:0.3rem; }
-.histCard .tags { font-size:0.8rem; color:#555; display:block; margin-top:0.25em; }
+.slideout.open { right:0; }
+#settingsView { flex-direction:column; }
+#settingsView header { width:100%; display:flex; justify-content:space-between; padding:1rem; background:#00796b; color:#fff; }
+#settingsView button, #settingsView input {
+  margin:0.5rem; padding:0.5rem 1rem; width:90%;
+}
