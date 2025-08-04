@@ -27,41 +27,18 @@
         <div class="tinder--card" id="fishCard">
           <div class="portrait-frame" id="portraitFrame">
             <img id="fishImage" src="" alt="Fish" />
-            <!-- Overlay controls -->
             <div class="overlay-controls">
-              <button id="loveBtn" title="Love"><img src="assets/icons/love.svg" alt="Love"></button>
-              <button id="likeBtn" title="Like"><img src="assets/icons/like.svg" alt="Like"></button>
-              <button id="dislikeBtn" title="Dislike"><img src="assets/icons/dislike.svg" alt="Dislike"></button>
-              <button id="chatBtn" title="Chat"><img src="assets/icons/chat.svg" alt="Chat"></button>
-              <button id="settingsBtn" title="Settings" class="settings-btn">
-                <img src="assets/icons/settings.svg" alt="Settings">
-              </button>
+              <button id="btnLove"><img src="assets/icons/love.svg" alt="Love"></button>
+              <button id="btnNope"><img src="assets/icons/dislike.svg" alt="Dislike"></button>
+              <button id="chatBtn"><img src="assets/icons/chat.svg" alt="Chat"></button>
+              <button id="settingsBtn" class="settings-btn"><img src="assets/icons/settings.svg" alt="Settings"></button>
             </div>
           </div>
-          <!-- Description panel -->
           <div id="descriptionPanel" class="desc-hidden">
             <h2 id="fishName"></h2>
             <p id="fishDescription"></p>
           </div>
         </div>
-      </div>
-
-      <div class="tinder--buttons">
-        <button id="btnNope"><img src="assets/icons/dislike.svg" alt="Nope"></button>
-        <button id="btnLove"><img src="assets/icons/love.svg" alt="Love"></button>
-      </div>
-    </div>
-
-    <!-- Chat Panel -->
-    <div id="chatPanel" class="slideout">
-      <header>
-        <h2 id="chatWith">Chat</h2>
-        <button id="closeChat"><img src="assets/icons/close.svg" alt="Close"></button>
-      </header>
-      <div id="chatHistory"></div>
-      <div id="chatInputWrapper">
-        <input id="chatInput" placeholder="Say something…" />
-        <button id="sendChat"><img src="assets/icons/send.svg" alt="Send"></button>
       </div>
     </div>
 
@@ -79,12 +56,10 @@
 
   </div>
 
-  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
   <script src="assets/idb.js"></script>
   <script src="assets/app.js"></script>
   <script>
-    // Service Worker registration (for offline caching)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js').catch(console.error);
     }

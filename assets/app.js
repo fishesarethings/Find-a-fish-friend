@@ -1,136 +1,103 @@
 /* globals Hammer */
-(async function(){
-  // Elements
-  const tinder    = document.getElementById('tinder');
-  const cards     = () => document.querySelectorAll('.tinder--card:not(.removed)');
-  const status    = document.querySelector('.tinder--status');
-  const saveBtn   = document.getElementById('saveUsername');
-  const onboard   = document.getElementById('onboard');
-  const fishImg   = document.getElementById('fishImage');
-  const nameEl    = document.getElementById('fishName');
-  const descEl    = document.getElementById('fishDescription');
-  const descPanel = document.getElementById('descriptionPanel');
-  const loveBtn   = document.getElementById('btnLove');
-  const nopeBtn   = document.getElementById('btnNope');
-  const settingsBtn = document.getElementById('settingsBtn');
-  const settingsView = document.getElementById('settingsView');
+document.addEventListener('DOMContentLoaded', () => {
+  const saveBtn       = document.getElementById('saveUsername');
+  const onboard       = document.getElementById('onboard');
+  const tinder        = document.getElementById('tinder');
+  const fishCard      = document.getElementById('fishCard');
+  const fishImg       = document.getElementById('fishImage');
+  const nameEl        = document.getElementById('fishName');
+  const descPanel     = document.getElementById('descriptionPanel');
+  const descEl        = document.getElementById('fishDescription');
+  const btnLove       = document.getElementById('btnLove');
+  const btnNope       = document.getElementById('btnNope');
+  const settingsBtn   = document.getElementById('settingsBtn');
+  const settingsView  = document.getElementById('settingsView');
   const closeSettings = document.getElementById('closeSettings');
-  const downloadSite = document.getElementById('downloadSite');
-  const exportBtn  = document.getElementById('exportBtn');
-  const importInput = document.getElementById('importInput');
-  const resetBtn   = document.getElementById('resetBtn');
-  const chatPanel  = document.getElementById('chatPanel');
+  const downloadSite  = document.getElementById('downloadSite');
 
-  let fishList = [], currentId, profile, username;
+  let fishList = [], currentIndex = 0, username = 'You';
 
-  // Onboard
-  saveBtn.onclick = async ()=>{
-    username = document.getElementById('usernameInput').value.trim()||'You';
-    await idbSet('meta',{key:'username',value:username});
+  saveBtn.addEventListener('click', async () => {
+    username = document.getElementById('usernameInput').value.trim() || 'You';
+    await idbSet('meta', { key: 'username', value: username });
     onboard.classList.add('hidden');
-    await initFish();
-    initCards();
-  };
 
-  // Load fish list
-  async function initFish(){
-    fishList = await fetch('fish/index.json').then(r=>r.json());
-    showNext();
-  }
+    try {
+      fishList = await fetch('fish/index.json').then(r => r.json());
+    } catch {
+      alert('Could not load fish/index.json');
+      fishList = [];
+    }
 
-  // Show next fish
-  function showNext(){
-    profile = getNextProfile();
-    currentId = profile.id;
-    fishImg.src = `fish/${currentId}.png`;
-    nameEl.textContent = profile.name;
-    descEl.textContent = profile.description;
-  }
-  function getNextProfile(){
-    const id = fishList.shift();
-    fishList.push(id);
-    // fetch JSON synchronously (small)
-    return JSON.parse(localStorage.getItem(`profile-${id}`) ||
-      JSON.stringify(fetch(`fish/${id}.json`).then(r=>r.json())));
-  }
-
-  // Initialize Tinder cards z-index/position
-  function initCards(){
-    Array.from(cards()).forEach((card, idx)=>{
-      card.style.zIndex = cards().length - idx;
-      card.style.transform = `scale(${(20-idx)/20}) translateY(-${30*idx}px)`;
-      card.style.opacity = (10-idx)/10;
-    });
     tinder.classList.add('loaded');
+    showFish(0);
+    attachSwipe();
+  });
+
+  function showFish(idx) {
+    if (!fishList.length) return;
+    currentIndex = idx % fishList.length;
+    const id = fishList[currentIndex];
+    fetch(`fish/${id}.json`)
+      .then(r => r.json())
+      .then(p => {
+        fishImg.src = `fish/${id}.jpg`;
+        nameEl.textContent = p.name;
+        descEl.textContent = p.description;
+      });
   }
 
-  // Hammer gesture
-  cards().forEach(card => {
-    const hammertime = new Hammer(card);
-    hammertime.on('pan', e=>{
-      card.classList.add('moving');
-      tinder.classList.toggle('tinder_love', e.deltaX>0);
-      tinder.classList.toggle('tinder_nope', e.deltaX<0);
-      const rotate = e.deltaX*0.03* (e.deltaY/80);
-      card.style.transform = `translate(${e.deltaX}px,${e.deltaY}px) rotate(${rotate}deg)`;
+  function nextFish(direction) {
+    // direction = true for love, false for nope
+    const id = fishList[currentIndex];
+    idbSet('fish', { id, reacted: direction ? 'loved' : 'disliked' });
+    // reset description panel
+    descPanel.classList.remove('desc-visible');
+    showFish(currentIndex + 1);
+  }
+
+  function attachSwipe() {
+    const hammer = new Hammer(fishCard);
+    hammer.on('pan', ev => {
+      fishCard.classList.add('moving');
+      tinder.classList.toggle('tinder_love', ev.deltaX > 0);
+      tinder.classList.toggle('tinder_nope', ev.deltaX < 0);
+      const rot = ev.deltaX * 0.03 * (ev.deltaY / 80);
+      fishCard.style.transform = `translate(${ev.deltaX}px,${ev.deltaY}px) rotate(${rot}deg)`;
     });
-    hammertime.on('panend', e=>{
-      card.classList.remove('moving');
-      tinder.classList.remove('tinder_love','tinder_nope');
-      const moveOut = document.body.clientWidth;
-      const keep = Math.abs(e.deltaX)<80 || Math.abs(e.velocityX)<0.5;
-      card.classList.toggle('removed', !keep);
-      if(!keep){
-        card.style.transform = `translate(${e.deltaX>0?moveOut:-moveOut}px,${e.deltaY}px) rotate(${e.deltaX>0?-30:30}deg)`;
-        idbSet('fish',{id:currentId,reacted:e.deltaX>0?'loved':'disliked',timestamp:Date.now()});
-        // next fish
-        card.addEventListener('transitionend', ()=>{
-          card.classList.remove('removed');
-          showNext();
-          initCards();
-        },{once:true});
+    hammer.on('panend', ev => {
+      fishCard.classList.remove('moving');
+      tinder.classList.remove('tinder_love', 'tinder_nope');
+      const keep = Math.abs(ev.deltaX) < 80 || Math.abs(ev.velocityX) < 0.5;
+      if (keep) {
+        fishCard.style.transform = '';
       } else {
-        card.style.transform = '';
+        const moveX = ev.deltaX > 0 ? window.innerWidth : -window.innerWidth;
+        fishCard.style.transform = `translate(${moveX}px,${ev.deltaY}px) rotate(${ev.deltaX>0?-30:30}deg)`;
+        fishCard.addEventListener('transitionend', () => {
+          fishCard.style.transform = '';
+          nextFish(ev.deltaX > 0);
+        }, { once: true });
       }
     });
-  });
-
-  // Buttons
-  loveBtn.onclick = ()=>simulateSwipe(true);
-  nopeBtn.onclick = ()=>simulateSwipe(false);
-
-  function simulateSwipe(isLove){
-    const card = cards()[0];
-    if(!card) return;
-    const moveOut = document.body.clientWidth*1.5;
-    card.classList.add('removed');
-    card.style.transform = `translate(${isLove?moveOut:-moveOut}px,-100px) rotate(${isLove?-30:30}deg)`;
-    idbSet('fish',{id:currentId,reacted:isLove?'loved':'disliked',timestamp:Date.now()});
-    card.addEventListener('transitionend', ()=>{
-      showNext(); initCards();
-    },{once:true});
   }
 
-  // Reveal description on scroll
-  document.getElementById('portraitFrame').addEventListener('wheel', e=>{
-    if(e.deltaY>0) descPanel.classList.add('desc-visible');
+  // Buttons
+  btnLove.addEventListener('click', () => nextFish(true));
+  btnNope.addEventListener('click', () => nextFish(false));
+
+  // Scroll reveals description
+  document.getElementById('portraitFrame').addEventListener('wheel', e => {
+    if (e.deltaY > 0) descPanel.classList.add('desc-visible');
   });
 
-  // Settings toggle
-  settingsBtn.onclick = ()=> settingsView.classList.remove('hidden');
-  closeSettings.onclick = ()=> settingsView.classList.add('hidden');
-
-  // Download site: just reload SW to cache all
-  downloadSite.onclick = ()=>{
-    if(navigator.serviceWorker.controller){
-      navigator.serviceWorker.controller.postMessage({action:'cache-all'});
-      alert('Site assets are being cached for offline use.');
+  // Settings panel
+  settingsBtn.addEventListener('click', () => settingsView.classList.remove('hidden'));
+  closeSettings.addEventListener('click', () => settingsView.classList.add('hidden'));
+  downloadSite.addEventListener('click', () => {
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ action: 'cache-all' });
+      alert('Caching site for offline use...');
     }
-  };
-
-  // Export/import/reset as before…
-  exportBtn.onclick = async ()=>{/*…*/};
-  importInput.onchange = async ()=>{/*…*/};
-  resetBtn.onclick = ()=>{/*…*/};
-
-})();
+  });
+});
